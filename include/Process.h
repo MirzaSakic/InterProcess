@@ -1,8 +1,6 @@
 #ifndef __PROCESS_H__
 #define __PROCESS_H__
 
-#include <boost/interprocess/sync/named_semaphore.hpp>
-#include <unistd.h>
 #include <functional>
 
 namespace Interprocess

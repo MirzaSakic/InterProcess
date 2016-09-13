@@ -19,11 +19,17 @@ public:
 
   int GetProcessId() const { return _processId; }
 
-  void startProcess() const;
+  void start() const;
+  void release();
+
+  ~Process();
 
 private:
   int _processId;
+  bool _isReleased = false;
+  std::string _processIdString;
   std::function<void()> _mainFunction;
+
 
   void childProcessRunner();
 };

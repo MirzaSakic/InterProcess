@@ -1,6 +1,8 @@
 #include <Process.h>
 #include <boost/interprocess/sync/named_semaphore.hpp>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 namespace Interprocess
 {
@@ -23,23 +25,42 @@ Process& Process::operator=(Process&& otherProcess)
   return *this;
 }
 
-void Process::startProcess() const
+void Process::start() const
 {
-  auto pIDString = to_string(_processId);
-  Semaphore semaphore(open_or_create, pIDString.c_str(), 0);
+  Semaphore semaphore(open_or_create, _processIdString.c_str(), 0);
   semaphore.post();
+}
+
+void Process::release()
+{
+  _isReleased = true;
 }
 
 void Process::childProcessRunner()
 {
   _processId = fork();
-  if( ! _processId)
+  if(_processId == 0)
   {
-    auto pIDString = to_string(getpid());
-    Semaphore semaphore(open_or_create, pIDString.c_str(), 0);
+    _processIdString = to_string(getpid());
+    Semaphore semaphore(open_or_create, _processIdString.c_str(), 0);
     semaphore.wait();
     _mainFunction();
     exit(0);
+  }
+  else if(_processId > 0)
+  {
+    _processIdString = to_string(_processId);
+  }
+}
+
+Process::~Process()
+{
+  if(_isReleased == false)
+  {
+    kill(_processId, SIGKILL);
+    int status;
+    waitpid(_processId, &status, 0);
+    Semaphore::remove(_processIdString.c_str());
   }
 }
 

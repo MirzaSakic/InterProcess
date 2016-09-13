@@ -13,9 +13,9 @@ public:
   template<typename FunctionType, typename... Args>
   Process(FunctionType&&, Args&&...);
   Process(const Process&) = delete;
-  Process(Process&&);
+  Process(Process&&) noexcept;
   Process& operator=(const Process&) = delete;
-  Process& operator=(Process&&);
+  Process& operator=(Process&&) noexcept;
 
   int GetProcessId() const { return _processId; }
 

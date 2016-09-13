@@ -11,13 +11,13 @@ using Semaphore = boost::interprocess::named_semaphore;
 using namespace boost::interprocess;
 using namespace std;
 
-Process::Process(Process&& otherProcess)
+Process::Process(Process&& otherProcess) noexcept
   : _processId(otherProcess._processId), _mainFunction(otherProcess._mainFunction)
 {
   otherProcess._processId = -1;
 }
 
-Process& Process::operator=(Process&& otherProcess)
+Process& Process::operator=(Process&& otherProcess) noexcept
 {
   _processId = otherProcess._processId;
   _mainFunction = otherProcess._mainFunction;

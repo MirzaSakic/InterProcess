@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
+#include <ProcessError.h>
 
 namespace Interprocess
 {
@@ -27,12 +28,20 @@ Process& Process::operator=(Process&& otherProcess) noexcept
 
 void Process::start() 
 {
+  if(_processId == -1)
+  {
+    throw ProcessError("Couldn't start process. Process does not exist.");
+  }
   Semaphore semaphore(open_or_create, _processIdString.c_str(), 0);
   semaphore.post();
 }
 
 void Process::detach()
 {
+  if(_processId == -1)
+  {
+    throw ProcessError("Couldn't detach process. Process does not exist.");
+  }
   _isReleased = true;
 }
 
@@ -51,11 +60,15 @@ void Process::childProcessRunner()
   {
     _processIdString = to_string(_processId);
   }
+  else
+  {
+    throw std::system_error(errno, std::system_category());
+  }
 }
 
 Process::~Process()
 {
-  if(_isReleased == false)
+  if(_isReleased == false && _processId != -1)
   {
     kill(_processId, SIGKILL);
     int status;

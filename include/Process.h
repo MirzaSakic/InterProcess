@@ -9,7 +9,7 @@ namespace Interprocess
 class Process
 {
 public:
-  Process() = delete;
+  Process();
   template<typename FunctionType, typename... Args>
   Process(FunctionType&&, Args&&...);
   Process(const Process&) = delete;
@@ -25,9 +25,9 @@ public:
   ~Process();
 
 private:
-  int _processId;
+  int _processId = -1;
   bool _isReleased = false;
-  std::string _processIdString;
+  std::string _processIdString = "-1";
   std::function<void()> _mainFunction;
 
 

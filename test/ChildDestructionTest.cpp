@@ -5,7 +5,7 @@
 using namespace testing;
 using namespace Interprocess;
 
-class InterprocessChildDestructionTest : public Test
+class ChildDestructionTest : public Test
 {
 public:
   static void dummyFunction(){}
@@ -18,14 +18,14 @@ public:
   }
 };
 
-TEST_F(InterprocessChildDestructionTest, ExpectToKillChildOnProcessDestructor)
+TEST_F(ChildDestructionTest, ExpectToKillChildOnProcessDestructor)
 {
   process.reset(nullptr);
   int result = kill(processID, SIGINT);
   ASSERT_TRUE(result == -1);
 }
 
-TEST_F(InterprocessChildDestructionTest, ExpectNotToKillChildWhenProcessIsReleased)
+TEST_F(ChildDestructionTest, ExpectNotToKillChildWhenProcessIsReleased)
 {
   process->detach();
   process.reset(nullptr);

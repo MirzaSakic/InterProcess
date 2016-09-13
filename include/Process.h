@@ -19,8 +19,8 @@ public:
 
   int GetProcessId() const { return _processId; }
 
-  void start() const;
-  void release();
+  void start();
+  void detach();
 
   ~Process();
 

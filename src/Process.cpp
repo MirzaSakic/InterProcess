@@ -25,13 +25,13 @@ Process& Process::operator=(Process&& otherProcess)
   return *this;
 }
 
-void Process::start() const
+void Process::start() 
 {
   Semaphore semaphore(open_or_create, _processIdString.c_str(), 0);
   semaphore.post();
 }
 
-void Process::release()
+void Process::detach()
 {
   _isReleased = true;
 }

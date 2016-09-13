@@ -7,20 +7,27 @@
 
 using namespace testing;
 using namespace std::chrono_literals;
+using namespace Interprocess;
 
-void writeToFile(const std::string& fileName, const std::string& strForFile)
+class InterprocessTest : public Test
 {
-  std::ofstream out(fileName);
-  out<<strForFile;
-  out.close();
-}
+public:
+  static void writeToFile(const std::string& fileName, const std::string& strForFile)
+  {
+    std::ofstream out(fileName);
+    out<<strForFile;
+    out.close();
+  }
 
-TEST(InterprocessTest, ExpectChildProcessToWriteToFile)
+  static void dummyFunction(){}
+};
+
+TEST_F(InterprocessTest, ExpectChildProcessToWriteToFile)
 {
   std::string expected = "This is test";
-  Interprocess::Process process(writeToFile, "TestFile.txt", expected);
+  Process process(writeToFile, "TestFile.txt", expected);
   process.start();
-  std::this_thread::sleep_for(50ms);
+  std::this_thread::sleep_for(10ms);
   std::ifstream input("TestFile.txt");
   std::string result ((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
   input.close();
@@ -28,27 +35,25 @@ TEST(InterprocessTest, ExpectChildProcessToWriteToFile)
   system("rm -rf TestFile.txt");
 }
 
-void dummyFunction(){}
-
-TEST(InterprocessTest, ExpectToKillChildOnProcessDestructor)
+TEST_F(InterprocessTest, ExpectToKillChildOnProcessDestructor)
 {
   int processID;
   {
-    Interprocess::Process process(dummyFunction);
+    Process process(dummyFunction);
     processID = process.GetProcessId();
   }
   int result = kill(processID, SIGINT);
-  ASSERT_TRUE(result < 0);
+  ASSERT_TRUE(result == -1);
 }
 
-TEST(InterprocessTest, ExpectNotToKillChildWhenProcessIsReleased)
+TEST_F(InterprocessTest, ExpectNotToKillChildWhenProcessIsReleased)
 {
   int processID;
   {
-    Interprocess::Process process(dummyFunction);
+    Process process(dummyFunction);
     processID = process.GetProcessId();
-    process.release();
+    process.detach();
   }
   int result = kill(processID, SIGINT);
-  ASSERT_TRUE(result >= 0);
+  ASSERT_TRUE(result == 0);
 }

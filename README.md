@@ -19,8 +19,9 @@ If *Process::detach* is not called, *Process* destructor will kill the child pro
 
   int main()
   {
-    Process process p(fun);
-    p.start();
+    Process process(fun);
+    process.start();
+	process.detach();
   }
  ```
 

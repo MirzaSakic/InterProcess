@@ -7,7 +7,7 @@ using namespace testing;
 using namespace Interprocess;
 using namespace std::chrono_literals;
 
-class InterprocessChildConfirmationTest : public Test
+class ChildConfirmationTest : public Test
 {
 public:
   static void writeToFile(const std::string& fileName, const std::string& strForFile)
@@ -36,7 +36,7 @@ public:
   Process process{writeToFile, FileName, expected};
 };
 
-TEST_F(InterprocessChildConfirmationTest, ExpectChildProcessToWriteToFile)
+TEST_F(ChildConfirmationTest, ExpectChildProcessToWriteToFile)
 {
   process.start();
   std::this_thread::sleep_for(10ms);

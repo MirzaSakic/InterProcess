@@ -9,7 +9,7 @@ namespace Interprocess
 class Process
 {
 public:
-  Process();
+  Process() = delete;
   template<typename FunctionType, typename... Args>
   Process(FunctionType&&, Args&&...);
   Process(const Process&) = delete;

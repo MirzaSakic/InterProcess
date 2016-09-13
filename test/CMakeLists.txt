@@ -14,7 +14,9 @@ add_definitions("-std=c++14")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 set(sources
-  ${CMAKE_SOURCE_DIR}/test/ProcessTest.cpp
+  ${CMAKE_SOURCE_DIR}/test/ChildDestructionTest.cpp
+  ${CMAKE_SOURCE_DIR}/test/ChildConfirmationTest.cpp
+  ${CMAKE_SOURCE_DIR}/test/InvalidProcessHandlingTest.cpp
   ${CMAKE_SOURCE_DIR}/test/TestsMain.cpp
   )
 

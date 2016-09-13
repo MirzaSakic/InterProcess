@@ -4,7 +4,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <ProcessError.h>
-
+#include <iostream>
 namespace Interprocess
 {
 
@@ -13,7 +13,7 @@ using namespace boost::interprocess;
 using namespace std;
 
 Process::Process(Process&& otherProcess) noexcept
-  : _processId(otherProcess._processId), _mainFunction(otherProcess._mainFunction)
+  : _processId(otherProcess._processId)
 {
   otherProcess._processId = -1;
 }
@@ -21,7 +21,6 @@ Process::Process(Process&& otherProcess) noexcept
 Process& Process::operator=(Process&& otherProcess) noexcept
 {
   _processId = otherProcess._processId;
-  _mainFunction = otherProcess._mainFunction;
   otherProcess._processId = -1;
   return *this;
 }

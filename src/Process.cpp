@@ -4,7 +4,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <ProcessError.h>
-#include <iostream>
+
 namespace Interprocess
 {
 

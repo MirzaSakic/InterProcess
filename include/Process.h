@@ -31,14 +31,15 @@ private:
   std::function<void()> _mainFunction;
 
 
-  void childProcessRunner();
+  void createChild();
+  [[noreturn]] void childRunner();
 };
 
 template<typename FunctionType, typename... Args>
 Process::Process(FunctionType&& mainFunction, Args&&... args)
   : _mainFunction(std::bind(std::forward<FunctionType>(mainFunction), std::forward<Args>(args)...)) 
 { 
-  childProcessRunner(); 
+  createChild(); 
 }
 
 }

@@ -44,16 +44,12 @@ void Process::detach()
   _isReleased = true;
 }
 
-void Process::childProcessRunner()
+void Process::createChild()
 {
   _processId = fork();
   if(_processId == 0)
   {
-    _processIdString = to_string(getpid());
-    Semaphore semaphore(open_or_create, _processIdString.c_str(), 0);
-    semaphore.wait();
-    _mainFunction();
-    exit(0);
+    childRunner();
   }
   else if(_processId > 0)
   {
@@ -63,6 +59,15 @@ void Process::childProcessRunner()
   {
     throw std::system_error(errno, std::system_category());
   }
+}
+
+void Process::childRunner()
+{
+  _processIdString = to_string(getpid());
+  Semaphore semaphore(open_or_create, _processIdString.c_str(), 0);
+  semaphore.wait();
+  _mainFunction();
+  exit(0); 
 }
 
 Process::~Process()
